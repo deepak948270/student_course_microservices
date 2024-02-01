@@ -1,0 +1,68 @@
+#changeing server port
+server:
+  port: 8081
+
+#data base configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/student_course_microservice?user=postgres&password=948270
+
+#jpa configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+#application name
+  application:
+    name: STUDENT-SERVICE
+
+#fetching configuration from config server
+  config:
+    import: configserver:http://localhost:8085
+
+#NOTE:by-default fetch-registry and register-with-eureka are true for eureka client so, don't need to write
+#spring-cloud-loadbalancer dependency comes with the eureka client so, no need to add manually(it's optional), if you did then fine
+
+#connect client to discovery server that is with eureka server
+#Note:Getting all instance registry info from the eureka server
+#we fetch these configuration using config server that's why we comment this config-code
+#eureka:
+  #client:
+    #service-url:
+      #defaultZone: http://localhost:8761/eureka/
+
+#we can also set eureka.instance.hostname=localhost if we get some error because of replication
+
+
+#resilience4j  circuit breaker configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      courseBreaker:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+#actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health
+  info:
+    env:
+      enabled: true
+
+#setting some information about to see when we hit info in actuator
+info:
+  app:
+    name: Student-service
+    discription: this service is made from thapak
+    version: 1.0

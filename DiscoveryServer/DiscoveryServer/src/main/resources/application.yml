@@ -1,0 +1,18 @@
+#server port
+server:
+  port: 8761
+
+#application name
+spring:
+  application:
+    name: Discovery-Server
+
+#disable discovery(Eureka) server to behave like Eureka client(mandatory)
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+
+#if we are chaging the Eureka server  port and want to register the Eureka server with yourself then we need to set the eureka.client.service-url.defaultZone=http://localhost:changedPort/eureka/ but dont do this if you using default port
+
